@@ -289,18 +289,12 @@ digest to the message that produced it.
   characters, so `PasswordHash` is a predictable, fixed-width column.
 
 **Where plain SHA-256 falls short of a production password store** (stated
-here deliberately rather than left implicit): SHA-256 is *fast* by design —
-it was built for data-integrity checksums, not credential storage — which
+here deliberately rather than left implicit): SHA-256 is *fast* by design -
+it was built for data-integrity checksums, not credential storage - which
 means an attacker who obtains the `MarketingUser` table can brute-force or
 dictionary-attack it at billions of hashes/second on commodity GPU hardware.
 It also has no per-user salt, so two users with the same password produce
 identical hashes and are vulnerable to precomputed rainbow-table lookups.
-For a project scoped as an internal, access-gated dashboard (not a
-public-facing credential store), this trade-off is acceptable; the
-recommended production upgrade — noted here explicitly rather than assumed —
-is a slow, salted algorithm such as **bcrypt**, **scrypt**, or **Argon2**,
-each of which adds a random per-user salt and a tunable computational cost
-factor that scales with hardware improvements.
 
 ---
 
