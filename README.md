@@ -1,4 +1,4 @@
-# Marketing Campaign Performance Dashboard
+# Marketing Analysis Dashboard
 
 A JDBC-backed decision-support tool for a marketing team to plan campaigns,
 manage ads and product pricing, and pull ROI/ROAS analytics — with all
