@@ -39,6 +39,7 @@ reason the budget check can't be bypassed by any client, present or future.
 ## 2. Architecture
 
 ```
+<img width="2720" height="1936" alt="marketing_dashboard_architecture" src="https://github.com/user-attachments/assets/fdfa2434-3731-43cb-8f4a-417059f2c6bf" />
 
 ```
 
