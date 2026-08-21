@@ -41,13 +41,6 @@ reason the budget check can't be bypassed by any client, present or future.
 <img width="2720" height="1936" alt="marketing_dashboard_architecture" src="https://github.com/user-attachments/assets/211ed32c-aae3-4afb-b3fc-43b51439c15c" />
 
 
-**Design principle:** business rules that must never be violated (budget
-overrun, selling-price integrity) live in triggers, so they hold regardless
-of which client — CLI, GUI, or a future REST API — issues the write. Derived
-metrics (ROAS, ROI, CTR, budget utilization %) live in views, so every DAO
-and every report reads the same computation instead of six slightly
-different `AttributedRevenue / CostPerAd` calculations scattered across the
-codebase.
 
 ---
 
@@ -208,9 +201,6 @@ byte[] bytes = digest.digest(input.getBytes("UTF-8"));
 
 ### 6.1 The mathematics of the compression function
 
-All arithmetic below is on 32-bit words, modulo 2³², written `+`. `ROTR^n(x)`
-is a circular right-rotation of `x` by `n` bits, `SHR^n(x)` is a logical
-right-shift, `⊕` is XOR, `∧` is AND, and `¬` is NOT.
 
 **Initial hash values** `H0..H7` — the first 32 bits of the fractional parts
 of the square roots of the first 8 primes (2, 3, 5, 7, 11, 13, 17, 19):
@@ -366,36 +356,8 @@ sha256sum` for a quick manual seed).
 
 ---
 
-## 9. Known limitations & recommended next steps
 
-Stated explicitly, not glossed over:
-
-- **Credentials in source** — `DBConnection` hardcodes DB user/password.
-  Move these to an environment variable or a `.properties` file excluded
-  from version control before sharing this repository.
-- **No password salting** — see §6; acceptable for this project's scope,
-  not for a public-facing deployment.
-- **No connection pooling** — every DAO call opens and closes a fresh JDBC
-  connection. Fine for a single-user console/desktop tool; would need a
-  pool (HikariCP, etc.) under concurrent multi-user load.
-- **Discount-only updates in `CampaignProductDAO.updateDiscount()`** —
-  since `SellingPrice` is computed by an *insert* trigger, confirm whether
-  an `UPDATE` trigger (or an explicit recompute call, mirroring
-  `sp_RecalcAdMetrics`) is also needed so `SellingPrice` stays correct after
-  a discount change, rather than reflecting only the value computed at
-  insert time.
-- **String-formatted DAO results** — DAOs return `List<String>` in a
-  `"Key=Value | Key=Value"` format that the GUI parses back into table
-  columns. This keeps the CLI simple but is fragile (a `|` or `=` in a data
-  value would break parsing) and duplicates formatting logic between the two
-  front ends. A typed result (e.g. small record/DTO classes per report)
-  would remove that coupling and make both front ends thinner.
-- **No automated tests** — DAO methods are straightforward candidates for
-  unit tests against a test schema or an in-memory/mocked `Connection`.
-
----
-
-## 10. Project structure
+## 9. Project structure
 
 ```
 .
@@ -410,9 +372,4 @@ Stated explicitly, not glossed over:
 └── README.md
 ```
 
----
 
-## License
-
-Academic / coursework project. Add a license here if you intend to publish
-or reuse this code outside its original course/context.
